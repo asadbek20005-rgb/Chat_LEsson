@@ -1,0 +1,37 @@
+Chat Application
+
+Api End Points
+
+User:
+[GET]
+api/users
+[POST]
+api/users
+[POST]
+api/users/user_id/register
+[POST]
+api/users/user_id/login
+[PUT]
+api/users/user_id
+[DELETE]
+api/users/user_id
+
+Chat:
+[GET]
+api/users/user_id/chats
+[POST]
+api/users/user_id/chats
+[PUT]
+api/users/user_id/chats/chat_id
+[DELETE]
+api/users/user_id/chats/chat_id
+
+Message:
+[GET]
+api/users/user_id/chats/chat_id/messages
+[POST]
+api/users/user_id/chats/chat_id/messages/send-message
+[PUT]
+api/users/user_id/chats/chat_id/messages/message_id
+[DELETE]
+api/users/user_id/chats/chat_id/messages/message_id
