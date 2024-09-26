@@ -18,7 +18,7 @@ namespace Chat.Api.Helper
             var check = file.ContentType != Constants.PngType ||
                 file.ContentType != Constants.JpgType;
 
-            if (check)
+            if (!check)
                 throw new PhotoNotFound();
         }
 

@@ -2,7 +2,7 @@ using Chat.Api.DIContainer;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
-RegisterationOfService.AddToService(builder);
+builder.AddToService();
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -32,6 +32,7 @@ builder.Services.AddSwaggerGen(c =>
             new string[]{}
         }
     });
+
 });
 
 var app = builder.Build();
@@ -44,6 +45,13 @@ if (app.Environment.IsDevelopment())
 }
 app.UseStaticFiles();
 app.UseHttpsRedirection();
+
+app.UseCors(policy =>
+{
+    policy.AllowAnyOrigin();
+    policy.AllowAnyMethod();
+    policy.AllowAnyHeader();    
+});
 
 app.UseAuthentication();
 app.UseAuthorization();

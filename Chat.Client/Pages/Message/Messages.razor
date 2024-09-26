@@ -1,0 +1,64 @@
+﻿@page "/messages"
+
+@*   "id": 1,
+    "text": "Hello jony",
+    "fromUsername": "spawn",
+    "fromUserId": "8016704a-d330-4da1-91e9-7d981aa8e5bf",
+    "contentId": 0,
+    "content": null,
+    "chatId": "31983bed-9dd6-455b-b740-a1c5cfe28710",
+    "sendAt": "2024-09-24T14:19:50.5407861Z",
+    "editedAt": null,
+    "isEdited": false *@
+
+
+    @using Microsoft.AspNetCore.Authorization
+
+@attribute [Authorize(Roles = "user, admin")]
+@inherits Razor_Page_Behind_Code_Source.MessageCodeSource
+
+<Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
+    <Authorized>
+        <label>
+            Enter Chat Id:
+            <input type="text" @bind-value="ChatId"></input>
+        </label>
+
+        <button type="submit" @onclick="GetChatMessages">Get Chat Messages</button>
+
+        @if (Messages is not null)
+        {
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">ChatId </th>
+                        <th scope="col">FromUsername</th>
+                        <th scope="col">FromUserId</th>
+                        <th scope="col">Text</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in Messages)
+                    {
+                        <tr>
+                            <td>@user.Id</td>
+                            <td>@user.ChatId</td>
+                            <td>@user.FromUsername</td>
+                            <td>@user.FromUserId</td>
+                            <td>@user.Text</td>
+
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </Authorized>
+
+</Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
+@code {
+
+}

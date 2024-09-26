@@ -25,13 +25,14 @@ namespace Chat.Api.Context
                 Id = Guid.NewGuid(),
                 FirstName = "Asadbek",
                 LastName = "Shermatov",
-                Username = "Spawn777",
+                Username = "spawn",
                 Gender = Constants.Male,
                 Age = 19,
                 Bio = "Never give up",
                 Role = Constants.Admin,
+             
             };
-            string password = "asadbek_945631282";
+            string password = "777";
             var passwordHash = new PasswordHasher<User>().HashPassword(user, password);
             user.PasswordHash = passwordHash;
             modelBuilder.Entity<User>()

@@ -35,8 +35,8 @@ namespace Chat.Api.Controllers
             }
         }
 
-        [HttpPost("Login")]
-        public async Task<IActionResult> Login([FromBody] LoginUserModel model)
+        [HttpPost("Login")]  
+        public async Task<IActionResult> Login([FromBody]LoginUserModel model)
         {
             try
             {
@@ -82,7 +82,7 @@ namespace Chat.Api.Controllers
             }
 
         }
-        [Authorize(Roles = "user")]
+        [Authorize(Roles = "admin,user")]
         [HttpPost("userId/add-or-update-photo")]
         public async Task<IActionResult> AddOrUpdateUserPhoto([FromForm] FileClass fileClass)
         {
@@ -91,7 +91,7 @@ namespace Chat.Api.Controllers
         }
 
         [Authorize(Roles = "admin,user")]
-        [HttpDelete("userId")]
+        [HttpDelete("Profile")]
         public async Task<IActionResult> DeleteUser()
         {
             try
@@ -107,7 +107,7 @@ namespace Chat.Api.Controllers
         }
 
         [Authorize(Roles = "admin, user")]
-        [HttpPut("userId")]
+        [HttpPut("Profile")]
         public async Task<IActionResult> UpdateUserGeneralData(UpdateUserGeneralDataModel updateUserGeneralDataModel)
         {
             try
@@ -128,7 +128,8 @@ namespace Chat.Api.Controllers
         {
             try
             {
-                var result = await _userManager.UpdateUserUsername(usernameModel);
+                var userId = _userHelper.GetUserId();
+                var result = await _userManager.UpdateUserUsername(userId,usernameModel);
                 return Ok(result);
             }
             catch (Exception e)

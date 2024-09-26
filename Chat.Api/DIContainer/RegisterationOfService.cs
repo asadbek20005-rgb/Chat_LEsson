@@ -2,6 +2,7 @@
 using Chat.Api.Helper;
 using Chat.Api.Jwt;
 using Chat.Api.Managers;
+using Chat.Api.MemoryCache;
 using Chat.Api.UnitOfWork.Classes;
 using Chat.Api.UnitOfWork.Implementations;
 using Chat.Api.UnitOfWork.Interfaces;
@@ -20,7 +21,6 @@ namespace Chat.Api.DIContainer
             var conntectionString = builder.Configuration.GetConnectionString("Connection");
             var jwtSettings = builder.Configuration.GetSection("JwtSettings").Get<JwtSettings>()!;
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key));
-
             builder.Services.AddHttpContextAccessor();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork.Classes.UnitOfWork>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -32,9 +32,10 @@ namespace Chat.Api.DIContainer
             builder.Services.AddScoped<UserHelper>();
             builder.Services.AddScoped<MessageHelper>();
             builder.Services.AddScoped<JwtSettings>();
+            builder.Services.AddScoped<MemoryCacheManager>();
 
 
-
+            builder.Services.AddCors();
 
             builder.Services.AddDbContext<AppDbContext>(options =>
             {

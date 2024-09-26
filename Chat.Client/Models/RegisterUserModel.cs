@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Chat.Api.Models
+namespace Chat.Client.Models
 {
-    public class CreateUserModel
+    public class RegisterUserModel
     {
         [Required]
         public string FirstName { get; set; }

@@ -188,19 +188,21 @@ namespace Chat.Api.Managers
             }
             if (check)
                 await _unitOfWork.UserRepository.UpdateUser(user);
-
+            await Set();
             return user.ParseToDto();
         }
 
-        public async Task<UserDto> UpdateUserUsername(UpdateUsernameModel usernameModel)
+        public async Task<UserDto> UpdateUserUsername(Guid userId, UpdateUsernameModel usernameModel)
         {
-            var user = await _unitOfWork.UserRepository.GetUserByUsername(usernameModel.Username);
+            var user = await _unitOfWork.UserRepository.GetUserById(userId);
 
             if (user == null)
                 throw new UserExist($" The User with {user.Username} is not exist");
 
             user.Username = usernameModel.Username;
+            Constants.AdminUsername = usernameModel.Username;
             await _unitOfWork.UserRepository.UpdateUser(user);
+            await Set();
             return user.ParseToDto();
         }
 
