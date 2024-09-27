@@ -1,7 +1,6 @@
-﻿using Blazored.LocalStorage;
-using Chat.Client.DTOs.User;
+﻿using Chat.Client.DTOs.User;
 using Chat.Client.LocalStorage;
-using Chat.Client.Models;
+using Chat.Client.Models.User;
 using System.Net;
 using System.Net.Http.Json;
 
@@ -17,11 +16,24 @@ namespace Chat.Client.Integrations.User
             _storageService = localStorageService;
         }
 
+        public async Task<Tuple<HttpStatusCode, UserDto?>> GetProfile()
+        {
+            string url = "/api/users/profile";
+            string token = await _storageService.GetToken();
+            if (!string.IsNullOrEmpty(token))
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+            var response = await _httpClient.GetAsync(url);
+            var profile = await response.Content.ReadFromJsonAsync<UserDto>();
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                return Tuple.Create(HttpStatusCode.OK, profile);
+            return new(response.StatusCode, profile);
+        }
+
         public async Task<Tuple<HttpStatusCode, List<UserDto>>> GetUsers()
         {
             string url = "/api/users";
             var token = await _storageService.GetToken();
-            if(!string.IsNullOrEmpty(token))
+            if (!string.IsNullOrEmpty(token))
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
             var response = await _httpClient.GetAsync(url);
             var userDtos = await response.Content.ReadFromJsonAsync<List<UserDto>>();
@@ -49,6 +61,9 @@ namespace Chat.Client.Integrations.User
             return new(response.StatusCode, result);
         }
 
+        public Task<Tuple<HttpStatusCode, UserDto>> UpdateProfile()
+        {
 
+        }
     }
 }

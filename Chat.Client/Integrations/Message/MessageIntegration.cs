@@ -13,7 +13,7 @@ namespace Chat.Client.Integrations.Message
         {
             _httpClient = httpClient;
             _localStorageService = localStorageService;
-        }
+        }   
 
         public async Task<Tuple<HttpStatusCode, List<MessageDto>>> GetChatMessages(Guid chatId)
         {

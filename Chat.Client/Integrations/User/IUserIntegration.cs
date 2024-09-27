@@ -1,5 +1,5 @@
 ﻿using Chat.Client.DTOs.User;
-using Chat.Client.Models;
+using Chat.Client.Models.User;
 using System.Net;
 
 namespace Chat.Client.Integrations.User
@@ -9,5 +9,8 @@ namespace Chat.Client.Integrations.User
         Task<Tuple<HttpStatusCode, string>> Login(LoginUserModel loginUser);
         Task<Tuple<HttpStatusCode, object>> Register(RegisterUserModel loginUser);
         Task<Tuple<HttpStatusCode,List<UserDto>>> GetUsers();
+        Task<Tuple<HttpStatusCode, UserDto>> GetProfile();
+        Task<Tuple<HttpStatusCode, UserDto>> UpdateProfile();
+
     }
 }

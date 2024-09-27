@@ -1,5 +1,5 @@
 ﻿using Chat.Client.Integrations.User;
-using Chat.Client.Models;
+using Chat.Client.Models.User;
 using Microsoft.AspNetCore.Components;
 
 namespace Chat.Client.Razor_Page_Behind_Code_Source

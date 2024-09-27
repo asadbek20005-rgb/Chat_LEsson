@@ -1,0 +1,16 @@
+﻿@page "/account/profile"
+@inherits Razor_Page_Behind_Code_Source.ProfleCodeSource
+<form>
+
+<img src="@UserDto?.PhotoUrl"/>
+<h1>@UserDto?.FirstName</h1>
+<h1>@UserDto?.LastName</h1>
+<h1>@UserDto?.Username</h1>
+<h1>@UserDto?.Gender</h1>
+<h1>@UserDto?.Age</h1>
+<h1>@UserDto?.Role</h1>
+<h1>@UserDto?.Bio</h1>
+<h1>@UserDto?.CreatedDate</h1>
+
+<button type="submit">Edit Profile</button>
+</form>
