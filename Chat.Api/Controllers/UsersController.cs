@@ -108,7 +108,7 @@ namespace Chat.Api.Controllers
 
         [Authorize(Roles = "admin, user")]
         [HttpPut("Profile")]
-        public async Task<IActionResult> UpdateUserGeneralData(UpdateUserGeneralDataModel updateUserGeneralDataModel)
+        public async Task<IActionResult> UpdateUserGeneralData([FromBody]UpdateUserGeneralDataModel updateUserGeneralDataModel)
         {
             try
             {

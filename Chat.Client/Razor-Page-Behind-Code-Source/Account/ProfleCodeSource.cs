@@ -14,6 +14,7 @@ namespace Chat.Client.Razor_Page_Behind_Code_Source
         protected override async Task OnInitializedAsync()
         {
             UserDto = await GetProfile();
+            
         }
 
         protected async Task<UserDto> GetProfile()
@@ -23,6 +24,11 @@ namespace Chat.Client.Razor_Page_Behind_Code_Source
                 return userDto;
             else NavigationManager.NavigateTo($"/home/{statusCode}");
             return new UserDto();
+        }
+
+        protected void GoToUptdaePage()
+        {
+            NavigationManager.NavigateTo($"/account/profile/update");
         }
     }
 }

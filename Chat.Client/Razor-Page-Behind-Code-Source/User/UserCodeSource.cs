@@ -1,8 +1,6 @@
 ﻿using Chat.Client.DTOs.User;
 using Chat.Client.Integrations.User;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
 
 namespace Chat.Client.Razor_Page_Behind_Code_Source
 {
@@ -32,4 +30,3 @@ namespace Chat.Client.Razor_Page_Behind_Code_Source
         }
     }
 }
-    

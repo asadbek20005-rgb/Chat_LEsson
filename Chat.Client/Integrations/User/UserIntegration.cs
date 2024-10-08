@@ -16,7 +16,7 @@ namespace Chat.Client.Integrations.User
             _storageService = localStorageService;
         }
 
-        public async Task<Tuple<HttpStatusCode, UserDto?>> GetProfile()
+        public async Task<Tuple<HttpStatusCode, UserDto>> GetProfile()
         {
             string url = "/api/users/profile";
             string token = await _storageService.GetToken();
@@ -25,8 +25,8 @@ namespace Chat.Client.Integrations.User
             var response = await _httpClient.GetAsync(url);
             var profile = await response.Content.ReadFromJsonAsync<UserDto>();
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
-                return Tuple.Create(HttpStatusCode.OK, profile);
-            return new(response.StatusCode, profile);
+                return Tuple.Create(HttpStatusCode.OK, profile)!;
+            return new(response.StatusCode, profile!);
         }
 
         public async Task<Tuple<HttpStatusCode, List<UserDto>>> GetUsers()
@@ -61,9 +61,17 @@ namespace Chat.Client.Integrations.User
             return new(response.StatusCode, result);
         }
 
-        public Task<Tuple<HttpStatusCode, UserDto>> UpdateProfile()
+        public async Task<Tuple<HttpStatusCode, UserDto>> UpdateProfile(UpdateProfileModel profileModel)
         {
-
+            string url = "/api/users/profile";
+            var token = await _storageService.GetToken();
+            if (token is not null)
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+            var response = await _httpClient.PutAsJsonAsync(url, profileModel);
+            var updatedProfile = await response.Content.ReadFromJsonAsync<UserDto>();
+            if (response.StatusCode == HttpStatusCode.OK)
+                return new(response.StatusCode, updatedProfile);
+            return new(response.StatusCode, updatedProfile);
         }
     }
-}
+}   

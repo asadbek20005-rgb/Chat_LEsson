@@ -41,12 +41,12 @@ namespace Chat.Api.Controllers
             var result = await _messageManagaer.GetChatMessageById(chatId, messageId);
             return Ok(result);
         }
-
+            
        
-
+    
         [Authorize(Roles = "admin, user")]
         [HttpPost]
-        public async Task<IActionResult> SendMessage(Guid chatId, SendMessageModel model)
+        public async Task<IActionResult> SendMessage(Guid chatId,[FromBody] SendMessageModel model)
         {
             try
             {

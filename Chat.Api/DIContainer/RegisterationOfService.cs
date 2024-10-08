@@ -43,6 +43,7 @@ namespace Chat.Api.DIContainer
             });
 
             builder.Services.AddMemoryCache();
+            builder.Services.AddSignalR();
 
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer("Bearer", options =>
             {
@@ -55,10 +56,24 @@ namespace Chat.Api.DIContainer
                     ValidateIssuer = true,
                     ValidateAudience = true,
                     ValidateIssuerSigningKey = true,
-                    ValidateLifetime = true,
+                    ValidateLifetime = false,
 
                 };
                 options.SaveToken = true;
+
+                options.Events = new JwtBearerEvents()
+                {
+                    OnMessageReceived = context =>
+                    {
+                        var token = context.Token;
+                        if (token != null)
+                            token = context.Request.Query["token"];
+                        if(token != null)
+                            context.Token = token;
+
+                        return Task.CompletedTask;
+                    }
+                };
             });
 
         }

@@ -23,8 +23,10 @@ namespace Chat.Client.BlazorCustomAuth
             if (string.IsNullOrEmpty(token))
             {
                 var result = new ClaimsPrincipal(new ClaimsIdentity());
+                return new AuthenticationState(result);
+
             }
-            
+
 
             var claims = ParseClaimsFromJwt(token);
             var identity = new ClaimsIdentity(claims, "jwtAuth");

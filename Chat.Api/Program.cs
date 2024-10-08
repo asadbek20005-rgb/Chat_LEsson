@@ -1,3 +1,4 @@
+using Chat.Api.Chat_Hub;
 using Chat.Api.DIContainer;
 using Microsoft.OpenApi.Models;
 
@@ -6,6 +7,7 @@ builder.AddToService();
 // Add services to the container.
 
 builder.Services.AddControllers();
+builder.Services.AddSignalR();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -50,12 +52,14 @@ app.UseCors(policy =>
 {
     policy.AllowAnyOrigin();
     policy.AllowAnyMethod();
-    policy.AllowAnyHeader();    
+    policy.AllowAnyHeader();
+    policy.SetIsOriginAllowed((host) => true);
 });
 
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.MapHub<ChatHub>("/chat-hub");
 app.MapControllers();
 
 app.Run();

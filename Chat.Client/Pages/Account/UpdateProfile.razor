@@ -1,2 +1,24 @@
-﻿<h3>UpdateProfile</h3>
+﻿@page "/account/profile/update"
+@inherits Razor_Page_Behind_Code_Source.UpdateProfileCodeSource
 
+
+<h1>Update Page</h1>
+<form>
+    <div class="mb-3">
+        <label for="FirstName" class="form-label">First Name</label>
+        <input type="text" class="form-control" @bind="@Model.FirstName" />
+    </div>
+    <div class="mb-3">
+        <label for="LastName" class="form-label">Last Name</label>
+        <input type="text" class="form-control" @bind="@Model.LastName">
+    </div>
+    <div class="mb-3">
+        <label for="Age" class="form-label">Age</label>
+        <input type="text" class="form-control" @bind="@Model.Age">
+    </div>
+    <div class="mb-3">
+        <label for="Gender" class="form-label">Gender</label>
+        <input type="text" class="form-control" @bind="@Model.Gender">
+    </div>
+</form>
+    <button type="submit" class="btn btn-primary" @onclick="UpdateProfile">Edit</button>

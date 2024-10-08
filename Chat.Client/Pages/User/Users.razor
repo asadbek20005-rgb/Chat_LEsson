@@ -4,12 +4,10 @@
 @attribute [Authorize(Roles ="admin, user")]
 @inherits Razor_Page_Behind_Code_Source.UserCodeSource
 
-<Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
-<Authorized>
 
 @if(Users is not null)
 {
-    
+
 <table class="table">
     <thead>
         <tr>
@@ -47,6 +45,3 @@
     </tbody>
 </table>
 }
-</Authorized>
-
-</Microsoft.AspNetCore.Components.Authorization.AuthorizeView>

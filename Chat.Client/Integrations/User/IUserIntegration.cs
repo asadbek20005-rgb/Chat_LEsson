@@ -10,7 +10,7 @@ namespace Chat.Client.Integrations.User
         Task<Tuple<HttpStatusCode, object>> Register(RegisterUserModel loginUser);
         Task<Tuple<HttpStatusCode,List<UserDto>>> GetUsers();
         Task<Tuple<HttpStatusCode, UserDto>> GetProfile();
-        Task<Tuple<HttpStatusCode, UserDto>> UpdateProfile();
+        Task<Tuple<HttpStatusCode, UserDto>> UpdateProfile(UpdateProfileModel profileModel);
 
     }
 }
