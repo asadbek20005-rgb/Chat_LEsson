@@ -1,5 +1,6 @@
 ﻿using Chat.Client.DTOs.UserChat;
 using Chat.Client.LocalStorage;
+using Chat.Client.Models.Message;
 using System.Net;
 using System.Net.Http.Json;
 
@@ -47,11 +48,11 @@ namespace Chat.Client.Integrations.UserChat
             return Tuple.Create(response.StatusCode, userChats)!;
         }
 
-        public async Task<Tuple<HttpStatusCode, MessageDto>> SendMessage(Guid chatId, string text)
+        public async Task<Tuple<HttpStatusCode, MessageDto>> SendTextMessage(Guid chatId, SendMessageModel model)
         {
             await AddTokenToHeader();
-            string url = $"api/users/userId/chats/{chatId}/messages";
-            var response = await _httpClient.PostAsJsonAsync(url, text);
+            string url = $"api/users/userId/chats/{chatId}/Messages/send-text-message";
+            var response = await _httpClient.PostAsJsonAsync(url, model);
             var messageDto = await response.Content.ReadFromJsonAsync<MessageDto>();
             return Tuple.Create(response.StatusCode, messageDto)!;
         }

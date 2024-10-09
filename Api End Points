@@ -5,6 +5,8 @@ Api End Points
 User:
 [GET]
 api/users
+[GET]
+api/users/user_id
 [POST]
 api/users
 [POST]
@@ -17,8 +19,12 @@ api/users/user_id
 api/users/user_id
 
 Chat:
+[GET("Admin")]
+api/chats
 [GET]
 api/users/user_id/chats
+[GET]
+api/users/user_id/chats/chat_id
 [POST]
 api/users/user_id/chats
 [PUT]

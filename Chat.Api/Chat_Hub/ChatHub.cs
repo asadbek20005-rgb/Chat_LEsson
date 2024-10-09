@@ -10,21 +10,21 @@ namespace Chat.Api.Chat_Hub
 
         public override async Task OnConnectedAsync()
         {
-            var userId = Context.User.Claims    
+            var userId =  Context?.User?.Claims    
                 .FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)!.Value;
-            var username = Context.User.Claims
+            var username = Context?.User?.Claims
                 .FirstOrDefault(x => x.Type == ClaimTypes.GivenName)!.Value;
 
-            var connectionId =Context.ConnectionId;
+            var connectionId =Context?.ConnectionId;
 
-            ConnectionIds.Add(new( Guid.Parse(userId),connectionId));
+            ConnectionIds.Add(new( Guid.Parse(userId!),connectionId!));
         }
 
 
 
         public override async Task OnDisconnectedAsync(Exception? exception)
         {
-            var userId = Context.User.Claims
+            var userId = Context.User!.Claims
                .FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)!.Value;
             var username = Context.User.Claims
                 .FirstOrDefault(x => x.Type == ClaimTypes.GivenName)!.Value;
@@ -33,7 +33,7 @@ namespace Chat.Api.Chat_Hub
 
             var connection = ConnectionIds.FirstOrDefault(x => x.Item2 == connectionId);
 
-            ConnectionIds.Remove(connection);
+            ConnectionIds.Remove(connection!);
         }
     }
 }

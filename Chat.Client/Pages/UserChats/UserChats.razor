@@ -1,5 +1,8 @@
 ﻿@page "/user-chats"
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
 @inherits Razor_Page_Behind_Code_Source.UserChat.UserChatCodeSource
+
 
 
 
@@ -177,21 +180,35 @@
             <div class="sidebar-header">
                 <h2>Chats</h2>
             </div>
-            @if (UserChats != null &&  UserChats?.Count > 0)
+
+            <div class="contact-list">
+            @if (UserChats != null)
             {
-                <div class="contact-list">
+                if (UserChats?.Count > 0){
+
                     @foreach (var chat in UserChats)
                     {
-                        <div class="contact" @onclick=" () => { SelectedChat(chat.Id); }">
+                        <div class="contact" @onclick=" () => { SelectedChat(chat.Id);  }">
                             <div class="contact-avatar">@chat.ChatName?.ToCharArray()[0]</div>
                             <div class="contact-info">
                                 <h4>@chat.ChatName?</h4>
-                                <p>@chat.Messages?.Last().Text ...</p>
+
+                                    @{
+                                        if(chat.Messages is not null && chat.Messages.Count > 0)
+                                        {
+
+                                            var message = chat.Messages.Last();
+                                            @if (message is not null)
+                                            {
+                                                <p>@message.Text ...</p>
+                                            }
+                                        }
+                                    }
                             </div>
                         </div>
-
                     }
                     <br/>
+                }
                     <p>Others</p>
                     @if (Users is not null)
                     {
@@ -205,9 +222,8 @@
                             </div>
                         }
                     }
-                </div>
-            }
-
+                }
+            </div>
         </div>
 
         <div class="chat-window">
@@ -218,7 +234,7 @@
                 </div>
                 <div class="chat-body">
                     
-                    @if (Messages is not null || Messages?.Count > 0)
+                    @if (Messages is not null && Messages?.Count > 0)
                     {
                         @foreach (var message in Messages)
                         {
@@ -244,8 +260,8 @@
 
                 </div>
                 <div class="chat-footer">
-                    <input type="text" @bind="Text" @onkeyup="Pressed" placeholder="Type a message..." class="message-input">
-                    <button class="send-button" @onclick="SendMessage">Send</button>
+                    <input type="text" @bind="SendMessageModel.Text" @onkeyup="Pressed" placeholder="Type a message..." class="message-input">
+                    <button class="send-button" @onclick="SendTextMessage">Send</button>
                 </div>
             }
             else

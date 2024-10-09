@@ -1,8 +1,7 @@
-﻿using Chat.Client.DTOs.Message;
-using Chat.Client.DTOs.UserChat;
+﻿using Chat.Client.DTOs.UserChat;
 using Chat.Client.Integrations.UserChat;
 using Chat.Client.LocalStorage;
-using Chat.Client.Pages.UserChats;
+using Chat.Client.Models.Message;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.SignalR.Client;
 using System.Net;
@@ -15,7 +14,7 @@ namespace Chat.Client.Razor_Page_Behind_Code_Source.UserChat
         [Inject] IUserChatIntegration ChatIntegration { get; set; }
         protected ChatDto Chat { get; set; } = new();
 
-        protected string Text { get; set; }
+        protected SendMessageModel SendMessageModel { get; set; }
 
         protected List<MessageDto> Messages { get; set; } = new();
 
@@ -54,15 +53,14 @@ namespace Chat.Client.Razor_Page_Behind_Code_Source.UserChat
         }
 
 
-        protected async Task SendMessage()
+        protected async Task SendTextMessage()
         {
 
-            var (statusCode, messages) = await ChatIntegration.SendMessage(Chat.Id, Text);
+            var (statusCode, messages) = await ChatIntegration.SendTextMessage(Chat.Id, SendMessageModel);
 
             if (statusCode == HttpStatusCode.OK)
             {
-                var message = messages;
-                Text = string.Empty;
+                Messages.Add(messages);            
             }
 
         }

@@ -1,8 +1,10 @@
-﻿using Chat.Api.Helper;
+﻿using Chat.Api.Chat_Hub;
+using Chat.Api.Helper;
 using Chat.Api.Managers;
 using Chat.Api.Models.MessageModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 namespace Chat.Api.Controllers
 {
@@ -12,11 +14,13 @@ namespace Chat.Api.Controllers
     {
         private readonly MessageManager _messageManagaer;
         private readonly UserHelper _userHelper;
+        private readonly IHubContext<ChatHub> _hubContext;
 
-        public MessagesController(MessageManager messageManager, UserHelper user)
+        public MessagesController(MessageManager messageManager, UserHelper user, IHubContext<ChatHub> hubContext)
         {
             _messageManagaer = messageManager;
             _userHelper = user;
+            _hubContext = hubContext;
         }
         [Authorize(Roles = "admin")]
         [HttpGet("/api/Messages")]
@@ -45,13 +49,35 @@ namespace Chat.Api.Controllers
        
     
         [Authorize(Roles = "admin, user")]
-        [HttpPost]
-        public async Task<IActionResult> SendMessage(Guid chatId,[FromBody] SendMessageModel model)
+        [HttpPost("send-text-message")]
+        public async Task<IActionResult> SendTextMessage(Guid chatId,[FromBody] SendMessageModel model)
         {
             try
             {
                 var userId = _userHelper.GetUserId();
                 var result = await _messageManagaer.SendMessage(userId, chatId, model);
+                await _hubContext.Clients.All.SendAsync("ReceiveMessage", result);
+
+                return Ok(result);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
+        [Authorize(Roles = "admin, user")]
+        [HttpPost("send-file-message")]
+        public async Task<IActionResult> SendFileMessage(Guid chatId, [FromForm] FileMessageModel model)
+        {
+            try
+            {
+                var userId = _userHelper.GetUserId();
+                var result = await _messageManagaer.SendFileMessage(userId, chatId, model);
+                await _hubContext.Clients.All.SendAsync("ReceiveMessage", result);
+
                 return Ok(result);
 
             }

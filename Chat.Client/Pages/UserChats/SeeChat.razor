@@ -8,8 +8,8 @@
 <h1>ToUserId : @ToUserId</h1>
 
 
-<input @bind="Text"/>
-<button class="btn btn-primary" type="submit" @onclick="SendMessage">Send</button>
+<input @bind="SendMessageModel.Text"/>
+<button class="btn btn-primary" type="submit" @onclick="SendTextMessage">Send</button>
 
 
 
@@ -24,3 +24,4 @@ else
 {
     <h2> Hozircha sizda habarlar yoq</h2>
 }
+

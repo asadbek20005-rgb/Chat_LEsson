@@ -3,6 +3,7 @@ using Chat.Client.DTOs.UserChat;
 using Chat.Client.Integrations.User;
 using Chat.Client.Integrations.UserChat;
 using Chat.Client.LocalStorage;
+using Chat.Client.Models.Message;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
@@ -15,7 +16,7 @@ namespace Chat.Client.Razor_Page_Behind_Code_Source.UserChat
     public class UserChatCodeSource : ComponentBase
     {
         
-        public List<ChatDto>? UserChats { get; set; }
+        protected List<ChatDto>? UserChats { get; set; }
         [Inject] IUserIntegration? UserIntegration { get; set; }
         [Inject] IUserChatIntegration UserChatIntegration { get; set; }
         [Inject] LocalStorageService? LocalStorageService { get; set; }
@@ -28,10 +29,12 @@ namespace Chat.Client.Razor_Page_Behind_Code_Source.UserChat
         protected string? Text { get; set; }
         protected Guid? ChatId { get; set; }
         protected HubConnection? HubConnection { get; set; }
-
+        protected SendMessageModel? SendMessageModel { get; set; }
             
         protected override async Task OnInitializedAsync()
         {
+            UserChats = UserChats ?? new List<ChatDto>();
+            Messages = Messages ?? new List<MessageDto>();
 
             var (statusCodeForChats, responseForChats) = await UserChatIntegration.GetUserChats();
             if(statusCodeForChats == HttpStatusCode.OK) 
@@ -51,14 +54,11 @@ namespace Chat.Client.Razor_Page_Behind_Code_Source.UserChat
             GetChatNames();
 
 
-
-
-
             SortContacts();
             await DisconnectHub();
             await ConnectHub();
 
-            if (ChatId != Guid.Empty)
+            if (ChatId != null)
             {
                 Chat = UserChats!.SingleOrDefault(x => x.Id == ChatId)!;
                 Messages = Chat.Messages;
@@ -78,22 +78,23 @@ namespace Chat.Client.Razor_Page_Behind_Code_Source.UserChat
             var token = await LocalStorageService!.GetToken();
             if (!string.IsNullOrEmpty(token))
             {
-                if (HubConnection is null)
+                if (HubConnection == null)
                 {
                     HubConnection = new HubConnectionBuilder()
-                        .WithUrl($"http://localhost:5098/chat-hub/token={token}")
+                        .WithUrl($"https://localhost:7175/chat-hub?token={token}")
                         .Build();
+
+
+                    HubConnection.On<MessageDto>("ReceiveMessage", model =>
+                    {
+                        Messages= Messages ?? new List<MessageDto> ();
+                        Messages?.Add(model);
+                        StateHasChanged();
+                    });
+
+                    await HubConnection.StartAsync();
                 }
             }
-
-
-            HubConnection?.On<MessageDto>("NewMessage", model =>
-            {
-                Messages?.Add(model);
-                StateHasChanged();
-            });
-
-            await HubConnection!.StartAsync();
         }
 
         private void GetChatNames()
@@ -173,15 +174,15 @@ namespace Chat.Client.Razor_Page_Behind_Code_Source.UserChat
             }
         }
 
-        protected async Task SendMessage()
+        protected async Task SendTextMessage()
         {
 
-            var (statusCode, response) = await UserChatIntegration!.SendMessage(Chat!.Id, Text);
+            var (statusCode, response) = await UserChatIntegration!.SendTextMessage(Chat!.Id, SendMessageModel);
 
             if (statusCode == HttpStatusCode.OK)
             {
                 var message = response;
-                Text = string.Empty;
+                Text = message.Text;
             }
 
         }
@@ -190,7 +191,7 @@ namespace Chat.Client.Razor_Page_Behind_Code_Source.UserChat
         {
             if (e.Key == "Enter")
             {
-                await SendMessage();
+                await SendTextMessage();
             }
         }
 

@@ -75,7 +75,7 @@ namespace Chat.Api.UnitOfWork.Implementations
 
             foreach (var userChat in userChats)
             {   
-                var sortedChat = await _context.Chats
+                var sortedChat = await _context.Chats.Include(c => c.Messages)
                     .SingleAsync(x => x.Id == userChat.ChatId);
                 sortedChats.Add(sortedChat);
             }

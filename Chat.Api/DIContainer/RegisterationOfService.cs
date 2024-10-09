@@ -66,10 +66,17 @@ namespace Chat.Api.DIContainer
                     OnMessageReceived = context =>
                     {
                         var token = context.Token;
-                        if (token != null)
+
+                        if (string.IsNullOrEmpty(token))
+                        {
                             token = context.Request.Query["token"];
-                        if(token != null)
-                            context.Token = token;
+
+                            if (!string.IsNullOrEmpty(token))
+                            {
+                                context.Token = token;
+                            }
+
+                        }
 
                         return Task.CompletedTask;
                     }
