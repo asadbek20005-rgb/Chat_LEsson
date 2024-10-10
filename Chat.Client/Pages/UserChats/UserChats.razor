@@ -167,11 +167,9 @@
             border-radius: 20px;
             cursor: pointer;
         }
-
             .send-button:hover {
                 background-color: #3d9970;
             }
-
     </style>
 </head>
 <body>
@@ -227,44 +225,83 @@
         </div>
 
         <div class="chat-window">
-            @if (Chat is not null)
-            {
-                <div class="chat-header">
-                    <h3>@Chat?.ChatName</h3>
-                </div>
-                <div class="chat-body">
-                    
-                    @if (Messages is not null && Messages?.Count > 0)
-                    {
-                        @foreach (var message in Messages)
-                        {
 
-                            @if (Username != message.FromUsername)
-                            {   
-                                <div class="message left">
-                                    <div class="message-content">@message.Text</div>
-                                </div>
-                            }
-                            else
-                            {
-                                <div class="message right">
-                                    <div class="message-content">@message.Text</div>
-                                </div>
-                            }
-                        }
+            <div class="chat-header">
+                <h3>@Chat?.ChatName</h3>
+            </div>
+            <div class="chat-body">
+                @foreach(var message in Messages)
+                {
+                    if(Username != message.FromUsername)
+                    {
+                        
+                    <div class="message left">
+                        <div class="message-content">@message.Text</div>
+                        </div>
                     }
                     else
                     {
-                        <p>There is no messages</p>
-                    }
+                        <div class="message right">
+                            <div class="message-content">@message.Text</div>
+                        </div>
+                        
+                    }                  
+                }
 
+
+
+            </div>
+
+            <div class="chat-footer">
+                <input type="text" @bind="@SendMessageModel.Text" @onkeyup="Pressed" placeholder="Type a message..." class="message-input">
+                <button class="send-button" @onclick="SendTextMessage">Send</button>
+            </div>
+
+            @* @if (Chat is not null) *@
+            {
+               @*  <div class="chat-header">
+                    <h3>@Chat?.ChatName</h3>
                 </div>
+                <div class="chat-body"> *@
+                   @*  
+                    @if (Messages != null)
+                    {
+ *@
+                        @* <h1>OK</h1> *@
+                       @*  if(Messages.Count > 0)
+                        {
+                              
+                         @*   @foreach (var message in Messages)
+                            {
+                                
+                            
+
+                               @*   @if (!string.IsNullOrEmpty(Username) && !string.IsNullOrEmpty(message.FromUsername)  && Username != message.FromUsername)
+                                 {   
+                                <div class="message left">
+                                    <div class="message-content">@message.Text</div>
+                                </div>
+                                }
+                                 else
+                                {
+                                <div class="message right">
+                                    <div class="message-content">@message.Text</div>
+                                </div>
+                                } 
+                            } 
+                        } 
+                    }
+                @*     else
+                    {
+                        <p>There is no messages</p>
+                    } *@
+      @*            </div>
                 <div class="chat-footer">
-                    <input type="text" @bind="SendMessageModel.Text" @onkeyup="Pressed" placeholder="Type a message..." class="message-input">
+                    <input type="text" @bind="SendMessageModel!.Text" @onkeyup="Pressed" placeholder="Type a message..." class="message-input">
                     <button class="send-button" @onclick="SendTextMessage">Send</button>
                 </div>
-            }
-            else
+            } *@
+          @*   else
             {
                 <div class="chat-header">
                     <h3></h3>
@@ -272,7 +309,7 @@
                 <div class="chat-body">
                     <p>Select to chat</p>
                 </div>
-            }
+            }  *@
         </div>
     </div>
 </body>

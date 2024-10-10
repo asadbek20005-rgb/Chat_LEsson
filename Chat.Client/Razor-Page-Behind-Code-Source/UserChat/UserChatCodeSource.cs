@@ -21,15 +21,18 @@ namespace Chat.Client.Razor_Page_Behind_Code_Source.UserChat
         [Inject] IUserChatIntegration UserChatIntegration { get; set; }
         [Inject] LocalStorageService? LocalStorageService { get; set; }
         [Inject] AuthenticationStateProvider? AuthenticationStateProvider { get; set; }
+        [Inject] NavigationManager NavigationManager { get; set; }
         protected List<UserDto>? Users { get; set; }
         protected List<MessageDto>? Messages { get; set; }
         protected UserDto? User { get; set; }
         protected ChatDto? Chat { get; set; }
         protected string? Username { get; set; }
+        protected string? ToUsernameText { get; set; }
+
         protected string? Text { get; set; }
         protected Guid? ChatId { get; set; }
         protected HubConnection? HubConnection { get; set; }
-        protected SendMessageModel? SendMessageModel { get; set; }
+        protected SendMessageModel SendMessageModel { get; set; } = new SendMessageModel(); 
             
         protected override async Task OnInitializedAsync()
         {
@@ -100,7 +103,6 @@ namespace Chat.Client.Razor_Page_Behind_Code_Source.UserChat
         private void GetChatNames()
         {
             var currentFullName = GetFullName(User?.FirstName, User?.LastName);
-
             foreach (var chat in UserChats!)
             {
                 chat.ChatName = chat.ChatNames?.First(x => x != currentFullName);
@@ -150,10 +152,20 @@ namespace Chat.Client.Razor_Page_Behind_Code_Source.UserChat
 
         protected void SelectedChat(Guid chatId)
         {
-            ChatId = chatId;
-            Chat = UserChats!.Single(x => x.Id == ChatId);
-            Messages = Chat.Messages;
-            StateHasChanged();
+            if(UserChats is not null && UserChats.Any())
+            {
+                Chat = UserChats.FirstOrDefault(x => x.Id == chatId);
+                if(Chat is not null)
+                {
+                    Messages = Chat.Messages;
+                    
+                }
+                else
+                {
+                    Console.WriteLine("Chat not fouund");
+                }
+                StateHasChanged();
+            }
         }
 
         protected async Task CreateChat(Guid toUserId)
@@ -176,15 +188,15 @@ namespace Chat.Client.Razor_Page_Behind_Code_Source.UserChat
 
         protected async Task SendTextMessage()
         {
-
+            
             var (statusCode, response) = await UserChatIntegration!.SendTextMessage(Chat!.Id, SendMessageModel);
 
             if (statusCode == HttpStatusCode.OK)
             {
                 var message = response;
-                Text = message.Text;
+                Text = string.Empty;
             }
-
+                
         }
 
         protected async Task Pressed(KeyboardEventArgs e)
