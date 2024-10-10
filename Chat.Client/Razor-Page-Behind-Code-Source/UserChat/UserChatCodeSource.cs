@@ -189,6 +189,9 @@ namespace Chat.Client.Razor_Page_Behind_Code_Source.UserChat
         protected async Task SendTextMessage()
         {
             
+
+
+
             var (statusCode, response) = await UserChatIntegration!.SendTextMessage(Chat!.Id, SendMessageModel);
 
             if (statusCode == HttpStatusCode.OK)
