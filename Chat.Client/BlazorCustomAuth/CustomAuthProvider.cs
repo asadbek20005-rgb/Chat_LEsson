@@ -24,7 +24,6 @@ namespace Chat.Client.BlazorCustomAuth
             {
                 var result = new ClaimsPrincipal(new ClaimsIdentity());
                 return new AuthenticationState(result);
-
             }
 
 

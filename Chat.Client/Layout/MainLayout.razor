@@ -1,4 +1,7 @@
-﻿@inherits LayoutComponentBase
+﻿@using Chat.Client.LocalStorage
+@using Microsoft.AspNetCore.Components.Authorization
+@using System.Security.Claims
+@inherits LayoutComponentBase
 <div class="page">
     <div class="sidebar">
         <NavMenu />
@@ -6,7 +9,21 @@
 
     <main>
         <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
+            @if (IsAuthorized)
+            {
+            <button disabled class="btn btn-outline-danger">@_username</button>
+            <br />
+                <button type="submit" class="btn btn-outline-danger" @onclick="LogOut">Log out</button>
+            }
+            else
+            {
+                <button class="btn btn-outline-secondary" @onclick="Register">Register</button>
+                <br />
+                <button type="submit" class="btn btn-outline-primary" @onclick="LogIn">Login</button>
+            }
+
+                
+                
         </div>
 
         <article class="content px-4">
@@ -14,3 +31,45 @@
         </article>
     </main>
 </div>
+
+
+@code{
+    bool IsAuthorized { get; set; }
+    string _username { get; set; }
+    [Inject]
+    LocalStorageService LocalStorageService { get; set; } 
+    [Inject]
+    AuthenticationStateProvider StateProvider { get; set; }
+    [Inject]
+    NavigationManager NavigationManager { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        var token = await LocalStorageService.GetToken();
+        IsAuthorized = !string.IsNullOrEmpty(token);
+        if (IsAuthorized)
+        {
+        var stateProvider = (BlazorCustomAuth.CustomAuthProvider)StateProvider;
+        var state = await stateProvider.GetAuthenticationStateAsync();
+        _username = state.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.GivenName)?.Value;
+            
+        }
+        
+    }
+
+    private async Task LogOut()
+    {
+       await LocalStorageService.RemoveToken();
+        NavigationManager.Refresh(true);
+    }
+        
+    void LogIn()
+    {
+        NavigationManager.NavigateTo("/account/login");
+    }
+
+    void Register()
+    {
+        NavigationManager.NavigateTo("/account/register");
+    }
+
+}

@@ -19,7 +19,11 @@ namespace Chat.Client.Razor_Page_Behind_Code_Source
             bool isBadRequest = statusCode == System.Net.HttpStatusCode.BadRequest;
 
             if (isOk)
-                NavigationManager.NavigateTo($"/home/{response}");
+            {
+                NavigationManager.NavigateTo($"/user-chats");
+                NavigationManager.Refresh(true);
+            }
+                
             if (isBadRequest)
                 NavigationManager.NavigateTo($"/home/{statusCode.ToString()}");
             return "Login wasn't done";

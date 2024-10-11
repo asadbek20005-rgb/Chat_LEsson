@@ -142,7 +142,7 @@ namespace Chat.Client.Razor_Page_Behind_Code_Source.UserChat
                 {
                     var userChat = chat.User_Chats[0];
 
-                    var toUserId = userChat.UserId;
+                    var toUserId = userChat.ToUserId;
                     var toUser = Users?.SingleOrDefault(x => x.Id == toUserId);
                     if (toUser is not null)
                         Users?.Remove(toUser);
@@ -183,21 +183,18 @@ namespace Chat.Client.Razor_Page_Behind_Code_Source.UserChat
                     Users?.Remove(toUser);
 
                 UserChats?.Add(Chat);
+                NavigationManager.Refresh(true);
             }
         }
 
         protected async Task SendTextMessage()
         {
-            
-
-
-
             var (statusCode, response) = await UserChatIntegration!.SendTextMessage(Chat!.Id, SendMessageModel);
 
             if (statusCode == HttpStatusCode.OK)
             {
                 var message = response;
-                Text = string.Empty;
+                SendMessageModel.Text = string.Empty;
             }
                 
         }
