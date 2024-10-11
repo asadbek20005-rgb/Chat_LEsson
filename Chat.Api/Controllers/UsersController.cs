@@ -67,7 +67,7 @@ namespace Chat.Api.Controllers
                 return BadRequest(e.Message);
             }
         }
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "admin, user")]
         [HttpGet]
         public async Task<IActionResult> GetUsers()
         {
