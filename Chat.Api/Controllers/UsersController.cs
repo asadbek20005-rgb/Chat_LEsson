@@ -4,6 +4,7 @@ using Chat.Api.Managers;
 using Chat.Api.Models;
 using Chat.Api.Models.UserModel;
 using Chat.Api.Models.UserModels;
+using Chat.Api.ModelValidators;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,12 +19,18 @@ namespace Chat.Api.Controllers
         public UsersController(UserManager userManager, UserHelper userHelper) { _userManager = userManager; _userHelper = userHelper; }
 
         [HttpPost("Register")]
-        public async Task<IActionResult> Register(CreateUserModel model)
+        public async Task<IActionResult> Register([FromBody]CreateUserModel model)
         {
             try
             {
-                await _userManager.RegisterUser(model);
-                return Ok(model);
+                var valdator = new CreateUserValidator();
+              var modelState =  valdator.Validate(model);
+                if (modelState.IsValid)
+                {
+                    await _userManager.RegisterUser(model);
+                    return Ok(model);
+                }
+                return BadRequest(modelState.Errors);
             }
             catch (UserNotFound e)
             {
@@ -35,11 +42,13 @@ namespace Chat.Api.Controllers
             }
         }
 
-        [HttpPost("Login")]  
-        public async Task<IActionResult> Login([FromBody]LoginUserModel model)
+        [HttpPost("Login")]
+        public async Task<IActionResult> Login([FromBody] LoginUserModel model)
         {
             try
             {
+                var valdator = new LoginUserValidator();
+                valdator.Validate(model);
                 var token = await _userManager.LoginUser(model);
                 return Ok(token);
             }
@@ -108,7 +117,7 @@ namespace Chat.Api.Controllers
 
         [Authorize(Roles = "admin, user")]
         [HttpPut("Profile")]
-        public async Task<IActionResult> UpdateUserGeneralData([FromBody]UpdateUserGeneralDataModel updateUserGeneralDataModel)
+        public async Task<IActionResult> UpdateUserGeneralData([FromBody] UpdateUserGeneralDataModel updateUserGeneralDataModel)
         {
             try
             {
@@ -129,7 +138,7 @@ namespace Chat.Api.Controllers
             try
             {
                 var userId = _userHelper.GetUserId();
-                var result = await _userManager.UpdateUserUsername(userId,usernameModel);
+                var result = await _userManager.UpdateUserUsername(userId, usernameModel);
                 return Ok(result);
             }
             catch (Exception e)

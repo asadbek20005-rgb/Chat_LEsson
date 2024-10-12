@@ -247,14 +247,18 @@
                         
                     }                  
                 }
-
+            
 
             </div>
+            @if (IsEnteredChat)
+            {
 
-            <div class="chat-footer">
-                <input type="text" @bind="@SendMessageModel.Text" @onkeyup="Pressed" placeholder="Type a message..." class="message-input">
-                <button class="send-button" @onclick="SendTextMessage">Send</button>
-            </div>
+                <div class="chat-footer">
+                    <input type="text" @bind="@SendMessageModel.Text" @onkeyup="Pressed" placeholder="Type a message..." class="message-input">
+                    <button class="send-button" @onclick="SendTextMessage">Send</button>
+                </div>
+            }
+
 
             @* @if (Chat is not null) *@
             {

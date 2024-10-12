@@ -3,9 +3,12 @@ using Chat.Api.Helper;
 using Chat.Api.Jwt;
 using Chat.Api.Managers;
 using Chat.Api.MemoryCache;
+using Chat.Api.Models;
+using Chat.Api.ModelValidators;
 using Chat.Api.UnitOfWork.Classes;
 using Chat.Api.UnitOfWork.Implementations;
 using Chat.Api.UnitOfWork.Interfaces;
+using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -33,8 +36,6 @@ namespace Chat.Api.DIContainer
             builder.Services.AddScoped<MessageHelper>();
             builder.Services.AddScoped<JwtSettings>();
             builder.Services.AddScoped<MemoryCacheManager>();
-
-
             builder.Services.AddCors();
 
             builder.Services.AddDbContext<AppDbContext>(options =>

@@ -33,6 +33,8 @@ namespace Chat.Client.Razor_Page_Behind_Code_Source.UserChat
         protected Guid? ChatId { get; set; }
         protected HubConnection? HubConnection { get; set; }
         protected SendMessageModel SendMessageModel { get; set; } = new SendMessageModel(); 
+
+        protected bool IsEnteredChat { get; set; }
             
         protected override async Task OnInitializedAsync()
         {
@@ -158,7 +160,7 @@ namespace Chat.Client.Razor_Page_Behind_Code_Source.UserChat
                 if(Chat is not null)
                 {
                     Messages = Chat.Messages;
-                    
+                    IsEnteredChat = true;
                 }
                 else
                 {
