@@ -15,7 +15,7 @@ namespace Chat.Api.MemoryCache
             _memoryCache.Set(key, dtos);
         }
 
-
+            
         public object? GetDtos(string key)
         {
             if (_memoryCache.TryGetValue(key, out object dtos))

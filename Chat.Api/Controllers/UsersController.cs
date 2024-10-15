@@ -89,7 +89,6 @@ namespace Chat.Api.Controllers
             {
                 return BadRequest(e.Message);
             }
-
         }
         [Authorize(Roles = "admin,user")]
         [HttpPost("userId/add-or-update-photo")]

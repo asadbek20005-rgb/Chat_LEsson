@@ -12,6 +12,6 @@
         public static string AdminUsername = "Spawn777";
         public static string AdminPassword = "asadbek_945631282";
         public static string CacheKeyUsers = "users";
-
+        public static string CacheKeyChats = "chats";
     }
 }

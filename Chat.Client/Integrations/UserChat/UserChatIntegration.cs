@@ -49,7 +49,7 @@ namespace Chat.Client.Integrations.UserChat
         }
 
         public async Task<Tuple<HttpStatusCode, MessageDto>> SendTextMessage(Guid chatId, SendMessageModel model)
-        {
+            {
             await AddTokenToHeader();
             string url = $"api/users/userId/chats/{chatId}/Messages/send-text-message";
             var response = await _httpClient.PostAsJsonAsync(url, model);

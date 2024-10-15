@@ -1,8 +1,8 @@
 ﻿using Chat.Api.ConvertExtensions;
 using Chat.Api.Dtos;
 using Chat.Api.Entities;
-using Chat.Api.Exceptions;
 using Chat.Api.Helper;
+using Chat.Api.MemoryCache;
 using Chat.Api.UnitOfWork.Interfaces;
 
 namespace Chat.Api.Managers
@@ -11,27 +11,40 @@ namespace Chat.Api.Managers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly UserHelper _userHelper;
-        public ChatManager(IUnitOfWork unitOfWork, UserHelper userHelper)
+        private readonly MemoryCacheManager _memoryCacheManager;
+        public ChatManager(IUnitOfWork unitOfWork, UserHelper userHelper, MemoryCacheManager memoryCacheManager)
         {
             _unitOfWork = unitOfWork;
             _userHelper = userHelper;
+            _memoryCacheManager = memoryCacheManager;
         }
 
         // For Admin
-        
+
         public async Task<List<ChatDto>> GetAllChats()
         {
-            var chats= await _unitOfWork.ChatRepository.GetAllChats();
-            return chats.ParseToDtos();
+            var dtos = _memoryCacheManager.GetDtos(Constants.CacheKeyChats);
+            if (dtos is not null)
+            {
+                var chatDtos = (List<ChatDto>)dtos;
+                return chatDtos;
+            }
+            else
+            {
+
+                var chats = await _unitOfWork.ChatRepository.GetAllChats();
+                _memoryCacheManager.UpdateValue(Constants.CacheKeyChats, chats);
+                return chats.ParseToDtos();
+            }
         }
+
 
         public async Task<List<ChatDto>> GetAllUserChats(Guid userId)
         {
             var userChats = await _unitOfWork.ChatRepository.GetAllUserChats(userId);
-
             return userChats.ParseToDtos();
         }
-
+         
 
         public async Task<ChatDto> AddOrEnterChat(Guid fromUserId, Guid toUserId)
         {
@@ -71,7 +84,7 @@ namespace Chat.Api.Managers
 
             var userId = _userHelper.GetUserId();
             var chat = await _unitOfWork.ChatRepository.GetUserChatById(userId, chatId);
-           await _unitOfWork.ChatRepository.DeleteChat(chat);
+            await _unitOfWork.ChatRepository.DeleteChat(chat);
             return "Delete was successfull done!";
         }
     }
