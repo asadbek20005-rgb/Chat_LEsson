@@ -1,6 +1,7 @@
 ﻿using Chat.Client.DTOs.User;
 using Chat.Client.LocalStorage;
 using Chat.Client.Models.User;
+using Microsoft.AspNetCore.Http.Internal;
 using System.Net;
 using System.Net.Http.Json;
 
@@ -16,25 +17,30 @@ namespace Chat.Client.Integrations.User
             _storageService = localStorageService;
         }
 
+        public async Task<Tuple<HttpStatusCode, byte[]>> AddOrUpdatePhoto(FormFile fileClass)
+        {
+            await AddTokenToHeader();
+            string url = "/api/users/userId/add-or-update-photo";
+            var response = await _httpClient.PostAsJsonAsync(url, fileClass);
+            byte[] bytes = await response.Content.ReadAsByteArrayAsync();
+            return new(response.StatusCode, bytes);
+        }
+
         public async Task<Tuple<HttpStatusCode, UserDto>> GetProfile()
         {
             string url = "/api/users/profile";
-            string token = await _storageService.GetToken();
-            if (!string.IsNullOrEmpty(token))
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+            await AddTokenToHeader();
             var response = await _httpClient.GetAsync(url);
             var profile = await response.Content.ReadFromJsonAsync<UserDto>();
-            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            if (response.StatusCode == HttpStatusCode.OK)
                 return Tuple.Create(HttpStatusCode.OK, profile)!;
             return new(response.StatusCode, profile!);
         }
 
         public async Task<Tuple<HttpStatusCode, List<UserDto>>> GetUsers()
         {
+            await AddTokenToHeader();
             string url = "/api/users";
-            var token = await _storageService.GetToken();
-            if (!string.IsNullOrEmpty(token))
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
             var response = await _httpClient.GetAsync(url);
             var userDtos = await response.Content.ReadFromJsonAsync<List<UserDto>>();
             if (response.StatusCode == HttpStatusCode.OK)
@@ -63,15 +69,21 @@ namespace Chat.Client.Integrations.User
 
         public async Task<Tuple<HttpStatusCode, UserDto>> UpdateProfile(UpdateProfileModel profileModel)
         {
+            await AddTokenToHeader();
             string url = "/api/users/profile";
-            var token = await _storageService.GetToken();
-            if (token is not null)
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
             var response = await _httpClient.PutAsJsonAsync(url, profileModel);
             var updatedProfile = await response.Content.ReadFromJsonAsync<UserDto>();
             if (response.StatusCode == HttpStatusCode.OK)
                 return new(response.StatusCode, updatedProfile);
             return new(response.StatusCode, updatedProfile);
         }
+
+        private async Task AddTokenToHeader()
+        {
+            var token = await _storageService.GetToken();
+            if (token is not null)
+                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+        }
+
     }
-}   
+}

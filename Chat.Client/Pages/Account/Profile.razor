@@ -1,10 +1,13 @@
 ﻿@page "/account/profile"
 @using Microsoft.AspNetCore.Authorization
 @inherits Razor_Page_Behind_Code_Source.ProfleCodeSource
+
 @attribute [Authorize]
 <form>
     <div class="card">
-        @* <img src="img.jpg" alt="John" style="width:100%"> *@
+        <img src="@PhotoUrl" alt="Pircture" style="width:100%">
+        <InputFile OnChange="UploadFile" />
+        
         <h1>@UserDto?.FirstName @UserDto?.LastName</h1>
         <p class="title">@UserDto?.Username</p>
         <p>@UserDto?.Bio</p>
@@ -12,19 +15,7 @@
             <button type="submit" @onclick="GoToUptdaePage">Edit Profile</button>
         </p>
     </div>
-
-   @* <img src="@UserDto?.PhotoUrl"/>
-   <h1>@UserDto?.FirstName</h1>
-   <h1>@UserDto?.LastName</h1>
-   <h1>@UserDto?.Username</h1>
-   <h1>@UserDto?.Gender</h1>
-   <h1>@UserDto?.Age</h1>
-   <h1>@UserDto?.Role</h1>
-   <h1>@UserDto?.Bio</h1>
-   <h1>@UserDto?.CreatedDate</h1> *@
-
 </form>
-
 
 
 <style>

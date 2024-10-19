@@ -92,9 +92,9 @@ namespace Chat.Api.Controllers
         }
         [Authorize(Roles = "admin,user")]
         [HttpPost("userId/add-or-update-photo")]
-        public async Task<IActionResult> AddOrUpdateUserPhoto([FromForm] FileClass fileClass)
+        public async Task<IActionResult> AddOrUpdateUserPhoto( IFormFile fileClass)
         {
-            var result = await _userManager.AddOrUpdatePhoto(_userHelper.GetUserId(), fileClass.formFile);
+            var result = await _userManager.AddOrUpdatePhoto(_userHelper.GetUserId(), fileClass);
             return Ok(result);
         }
 
