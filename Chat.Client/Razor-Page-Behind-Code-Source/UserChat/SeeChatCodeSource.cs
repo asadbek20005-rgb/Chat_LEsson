@@ -13,15 +13,10 @@ namespace Chat.Client.Razor_Page_Behind_Code_Source.UserChat
     {
         [Inject] IUserChatIntegration ChatIntegration { get; set; }
         protected ChatDto Chat { get; set; } = new();
-
         protected SendMessageModel SendMessageModel { get; set; }
-
         protected List<MessageDto> Messages { get; set; } = new();
-
         [Parameter] public Guid ToUserId { get; set; }
-
         private HubConnection? HubConnection { get; set; }
-
         [Inject] LocalStorageService StorageService { get; set; }
 
         protected override async Task OnInitializedAsync()

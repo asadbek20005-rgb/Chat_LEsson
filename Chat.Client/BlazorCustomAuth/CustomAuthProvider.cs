@@ -1,5 +1,4 @@
-﻿using Blazored.LocalStorage;
-using Chat.Client.LocalStorage;
+﻿using Chat.Client.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -10,12 +9,10 @@ namespace Chat.Client.BlazorCustomAuth
     {
         private readonly LocalStorageService _storageService;
         private readonly JwtSecurityTokenHandler _jwtSecurityTokenHandler;
-        private readonly HttpClient _httpClient;
-        public CustomAuthProvider(LocalStorageService localStorageService, HttpClient httpClient)
+        public CustomAuthProvider(LocalStorageService localStorageService)
         {
             _storageService = localStorageService;
             _jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
-            _httpClient = httpClient;
         }
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {

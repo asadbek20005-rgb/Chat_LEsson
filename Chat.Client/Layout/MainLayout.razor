@@ -52,8 +52,7 @@
         var state = await stateProvider.GetAuthenticationStateAsync();
         _username = state.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.GivenName)?.Value;
             
-        }
-        
+        }  
     }
 
     private async Task LogOut()

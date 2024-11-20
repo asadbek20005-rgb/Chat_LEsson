@@ -1,4 +1,4 @@
-using Blazored.LocalStorage;
+    using Blazored.LocalStorage;
 using Chat.Client;
 using Chat.Client.BlazorCustomAuth;
 using Chat.Client.Integrations.Message;

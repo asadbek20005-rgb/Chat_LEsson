@@ -5,11 +5,9 @@ namespace Chat.Api.Helper
     public class UserHelper
     {
         private  readonly IHttpContextAccessor? _httpContextAccessor;
-        private readonly IHostEnvironment _hostEnvironment;
-        public UserHelper(IHttpContextAccessor? httpContextAccessor, IHostEnvironment hostEnvironment)
+        public UserHelper(IHttpContextAccessor? httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;
-            _hostEnvironment = hostEnvironment;
         }
 
         public  Guid GetUserId()
